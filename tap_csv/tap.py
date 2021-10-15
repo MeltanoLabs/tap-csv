@@ -1,8 +1,10 @@
 """CSV tap class."""
 
+import json
+import os
 from typing import List
 
-from singer_sdk import Tap, Stream
+from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 from tap_csv.client import CSVStream
@@ -23,10 +25,34 @@ class TapCSV(Tap):
                     th.Property("keys", th.ArrayType(th.StringType), required=True),
                 )
             ),
-            required=True,
             description="An array of csv file stream settings.",
         ),
+        th.Property(
+            "csv_files_definition",
+            th.StringType,
+            description="A path to the JSON file holding an array of file settings.",
+        ),
     ).to_dict()
+
+    def get_file_configs(self) -> List[dict]:
+        """Return a list of file configs.
+
+        Either directly from the config.json or in an external file
+        defined by csv_files_definition.
+        """
+        csv_files = self.config.get("files")
+        csv_files_definition = self.config.get("csv_files_definition")
+        if csv_files_definition:
+            if os.path.isfile(csv_files_definition):
+                with open(csv_files_definition, "r") as f:
+                    csv_files = json.load(f)
+            else:
+                self.logger.error(f"tap-csv: '{csv_files_definition}' file not found")
+                exit(1)
+        if not csv_files:
+            self.logger.error("No CSV file defintions found.")
+            exit(1)
+        return csv_files
 
     def discover_streams(self) -> List[Stream]:
         """Return a list of discovered streams."""
@@ -36,7 +62,7 @@ class TapCSV(Tap):
                 name=file_config.get("entity"),
                 file_config=file_config,
             )
-            for file_config in self.config["files"]
+            for file_config in self.get_file_configs()
         ]
 
 

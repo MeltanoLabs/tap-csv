@@ -42,11 +42,34 @@ Example:
 }
 ```
 
+Optionally, the files definition can be provided by an external json file:
+
+**config.json**
+```json
+{
+	"csv_files_definition": "files_def.json"
+}
+```
+
+
+**files_def.json**
+```json
+[ 	
+	{	"entity" : "leads",
+		"path" : "/path/to/leads.csv",
+		"keys" : ["Id"]
+	},
+	{	"entity" : "opportunities",
+		"path" : "/path/to/opportunities.csv",
+		"keys" : ["Id"]
+	}
+]
+```
+
 ## Installation
 
 ```bash
 pipx install git+https://github.com/MeltanoLabs/tap-csv.git
-
 ```
 
 ## Usage

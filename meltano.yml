@@ -1,0 +1,34 @@
+version: 1
+send_anonymous_usage_stats: true
+project_id: tap-csv
+plugins:
+  extractors:
+  - name: tap-csv
+    namespace: tap_csv
+    # TODO: To test using Meltano, replace with absolute path
+    #       to the tap-csv.sh script:
+    executable: ./tap-csv.sh
+    capabilities:
+    - state
+    - catalog
+    - discover
+    config:
+      files:
+      - entity: alphabet
+        file: alphabet.csv
+        keys:
+        - col1
+    settings:
+      - description: Array of objects with `entity`, `file`, and `keys` keys
+        kind: array
+        name: files
+      - description: Project-relative path to JSON file holding array of objects with
+          `entity`, `file`, and `keys` keys
+        documentation: https://gitlab.com/meltano/tap-csv#run
+        label: CSV Files Definition
+        name: csv_files_definition
+        placeholder: Ex. files-def.json
+  loaders:
+  - name: target-jsonl
+    variant: andyh1203
+    pip_url: target-jsonl

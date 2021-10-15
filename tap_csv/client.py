@@ -93,6 +93,7 @@ class CSVStream(Stream):
         This is evaluated prior to any records being retrieved.
         """
         properties: List[th.Property] = []
+        self.primary_keys = self.file_config.get("keys", [])
 
         for file_path in self.get_file_paths():
             for header in self.get_rows(file_path):

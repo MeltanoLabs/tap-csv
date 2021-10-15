@@ -14,9 +14,10 @@ Built with the [Meltano SDK](https://sdk.meltano.com) for Singer Taps and Target
 
 ## Settings
 
-| Setting| Required | Default | Description |
-|:-----|:--------:|:-------:|:------------|
-| files| True     | None    | An array of csv file stream settings. |
+| Setting             | Required | Default | Description |
+|:--------------------|:--------:|:-------:|:------------|
+| files               | False    | None    | An array of csv file stream settings. |
+| csv_files_definition| False    | None    | A path to the JSON file holding an array of file settings. |
 
 A full list of supported settings and capabilities is available by running: `tap-csv --about`
 

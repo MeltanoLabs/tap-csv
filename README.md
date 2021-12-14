@@ -100,7 +100,10 @@ Create tests within the `tap_csv/tests` subfolder and
   then run:
 
 ```bash
-poetry run pytest
+poetry run tox
+poetry run tox -e pytest
+poetry run tox -e format
+poetry run tox -e lint
 ```
 
 You can also test the `tap-csv` CLI interface directly using `poetry run`:

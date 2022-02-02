@@ -9,8 +9,9 @@ Built with the [Meltano SDK](https://sdk.meltano.com) for Singer Taps and Target
 
 * `sync`
 * `catalog`
-* `state`
 * `discover`
+
+Note: This tap currently does not support incremental state.
 
 ## Settings
 

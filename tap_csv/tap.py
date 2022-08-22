@@ -56,7 +56,7 @@ class TapCSV(Tap):
                 self.logger.error(f"tap-csv: '{csv_files_definition}' file not found")
                 exit(1)
         if not csv_files:
-            self.logger.error("No CSV file defintions found.")
+            self.logger.error("No CSV file definitions found.")
             exit(1)
         return csv_files
 

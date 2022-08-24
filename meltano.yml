@@ -19,11 +19,11 @@ plugins:
         keys:
         - col1
     settings:
-      - description: Array of objects with `entity`, `file`, and `keys` keys
+      - description: Array of objects with `entity`, `file`, `keys` keys, and `encoding`
         kind: array
         name: files
       - description: Project-relative path to JSON file holding array of objects with
-          `entity`, `file`, and `keys` keys
+          `entity`, `file`, `keys` keys, and `encoding`
         documentation: https://gitlab.com/meltano/tap-csv#run
         label: CSV Files Definition
         name: csv_files_definition

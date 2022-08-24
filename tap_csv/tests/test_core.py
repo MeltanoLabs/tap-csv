@@ -23,3 +23,22 @@ def test_standard_tap_tests():
     tests = get_standard_tap_tests(TapCSV, config=SAMPLE_CONFIG)
     for test in tests:
         test()
+
+
+# Run standard built-in tap tests from the SDK, with different encoding:
+def test_standard_tap_tests_encoding():
+    """Run standard built-in tap tests from the SDK, with different encoding."""
+    test_data_dir = os.path.dirname(os.path.abspath(__file__))
+    SAMPLE_CONFIG = {
+        "files": [
+            {
+                "entity": "test",
+                "path": f"{test_data_dir}/data/alphabet_encoding.csv",
+                "keys": [],
+                "encoding": "latin1",
+            }
+        ]
+    }
+    tests = get_standard_tap_tests(TapCSV, config=SAMPLE_CONFIG)
+    for test in tests:
+        test()

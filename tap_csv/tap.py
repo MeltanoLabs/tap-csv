@@ -24,6 +24,7 @@ class TapCSV(Tap):
                     th.Property("entity", th.StringType, required=True),
                     th.Property("path", th.StringType, required=True),
                     th.Property("keys", th.ArrayType(th.StringType), required=True),
+                    th.Property("encoding", th.StringType, required=False),
                 )
             ),
             description="An array of csv file stream settings.",

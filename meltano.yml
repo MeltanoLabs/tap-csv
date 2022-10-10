@@ -19,7 +19,7 @@ plugins:
         keys:
         - col1
     settings:
-      - description: Array of objects containing keys: `entity`, `file`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
+      - description: Array of objects containing keys - `entity`, `file`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
         kind: array
         name: files
       - description: Project-relative path to JSON file holding array of objects with

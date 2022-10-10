@@ -131,8 +131,3 @@ dmypy.json
 # Pyre type checker
 .pyre/
 
-/.idea/
-
-/data/
-
-config_csv.json

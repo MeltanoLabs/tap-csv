@@ -46,7 +46,10 @@ def test_standard_tap_tests_encoding():
 
 # Run standard built-in tap tests from the SDK, with different CSV dialect settings:
 def test_standard_tap_tests_csv_dialect():
-    """Run standard built-in tap tests from the SDK, with different CSV dialect settings."""
+    """
+        Run standard built-in tap tests from the SDK, with different
+        CSV dialect settings.
+    """
     test_data_dir = os.path.dirname(os.path.abspath(__file__))
     SAMPLE_CONFIG = {
         "files": [

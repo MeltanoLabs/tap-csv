@@ -57,9 +57,9 @@ def test_standard_tap_tests_csv_dialect():
                 "delimiter": ",",
                 "doublequote": True,
                 "escapechar": "^",
-                "quotechar": "\"",
+                "quotechar": '"',
                 "skipinitialspace": True,
-                "strict": True
+                "strict": True,
             }
         ]
     }

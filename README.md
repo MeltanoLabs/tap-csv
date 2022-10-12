@@ -28,6 +28,14 @@ The `config.json` contains an array called `files` that consists of dictionary o
 * `keys`: The names of the columns that constitute the unique keys for that entity
 * `encoding`: [Optional] The file encoding to use when reading the file (i.e. "latin1", "UTF-8"). Use this setting when you get a `UnicodeDecodeError` error.
 
+The following entries are passed through in an internal CSV dialect that then is used to configure the CSV reader:
+* `delimiter`: A one-character string used to separate fields. It defaults to ','.
+* `doublequote`: Controls how instances of quotechar appearing inside a field should themselves be quoted. When True, the character is doubled. When False, the escapechar is used as a prefix to the quotechar. It defaults to True.
+* `escapechar`: A one-character string used by the reader, where the escapechar removes any special meaning from the following character. It defaults to None, which disables escaping.
+* `quotechar`: A one-character string used to quote fields containing special characters, such as the delimiter or quotechar, or which contain new-line characters. It defaults to '"'.
+* `skipinitialspace`: When True, spaces immediately following the delimiter are ignored. The default is False.
+* `strict`: When True, raise exception Error on bad CSV input. The default is False.
+
 Example:
 
 ```json
@@ -35,12 +43,14 @@ Example:
 	"files":	[ 	
 					{	"entity" : "leads",
 						"path" : "/path/to/leads.csv",
-						"keys" : ["Id"]
+						"keys" : ["Id"],
+						"delimiter": ";"
 					},
 					{	"entity" : "opportunities",
 						"path" : "/path/to/opportunities.csv",
 						"keys" : ["Id"],
-						"encoding" : "latin1"
+						"encoding" : "latin1",
+						"skipinitialspace": true
 					}
 				]
 }

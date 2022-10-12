@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-csv"
-version = "0.0.7"
+version = "0.0.8"
 description = "`tap-csv` is a Singer tap for CSV, built with the Meltano SDK for Singer Taps."
 authors = ["Pat Nadolny"]
 keywords = [

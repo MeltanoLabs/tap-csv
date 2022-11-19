@@ -24,7 +24,7 @@ class TapCSV(Tap):
                     th.Property("entity", th.StringType, required=True),
                     th.Property("path", th.StringType, required=True),
                     th.Property("keys", th.ArrayType(th.StringType), required=True),
-                    th.Property("encoding", th.StringType, required=False),
+                    th.Property("encoding", th.StringType, required=False, default="utf-8"),
                     th.Property("delimiter", th.StringType, required=False),
                     th.Property("doublequote", th.BooleanType, required=False),
                     th.Property("escapechar", th.StringType, required=False),

@@ -8,21 +8,24 @@ jobs:
   linting:
 
     runs-on: ubuntu-latest
+    env:
+      PIP_CONSTRAINT: .github/workflows/constraints.txt
     strategy:
       matrix:
         # Only lint using the primary version used for dev
         python-version: [3.9]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.3.0
+    - name: Install Poetry
+      run: |
+        pipx install poetry
+        poetry --version
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4.5.0
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 1.2.2
+        cache: poetry
     - name: Install dependencies
       run: |
         poetry install
@@ -36,20 +39,22 @@ jobs:
     env:
       CLIENT_SECRETS: ${{ secrets.GA_CLIENT_SECRETS }}
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      PIP_CONSTRAINT: .github/workflows/constraints.txt
     strategy:
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3.3.0
+    - name: Install Poetry
+      run: |
+        pipx install poetry
+        poetry --version
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4.5.0
       with:
         python-version: ${{ matrix.python-version }}
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        version: 1.2.2
+        cache: poetry
     - name: Install dependencies
       run: |
         poetry install

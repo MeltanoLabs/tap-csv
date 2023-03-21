@@ -42,7 +42,16 @@ class TapCSV(Tap):
             th.StringType,
             description="A path to the JSON file holding an array of file settings.",
         ),
-        th.Property("add_metadata_columns", th.BooleanType, required=False, default=False),
+        th.Property(
+            "add_metadata_columns",
+            th.BooleanType,
+            required=False,
+            default=False,
+            description=(
+                "When True, add the metadata columns (`_sdc_source_file`, "
+                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output."
+            ),
+        ),
     ).to_dict()
 
     @classproperty

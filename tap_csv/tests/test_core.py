@@ -70,8 +70,9 @@ def test_standard_tap_tests_csv_dialect():
     for test in tests:
         test()
 
+
 # Run standard built-in tap tests from the SDK, with metadata columns included:
-def test_standard_tap_tests():
+def test_standard_tap_tests_metadata_cols():
     """Run standard tap tests from the SDK, with metadata columns included"""
     test_data_dir = os.path.dirname(os.path.abspath(__file__))
     SAMPLE_CONFIG = {
@@ -82,7 +83,7 @@ def test_standard_tap_tests():
                 "path": f"{test_data_dir}/data/alphabet.csv",
                 "keys": [],
             }
-        ]
+        ],
     }
     tests = get_standard_tap_tests(TapCSV, config=SAMPLE_CONFIG)
     for test in tests:

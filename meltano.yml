@@ -16,6 +16,7 @@ plugins:
       files:
       - entity: alphabet
         file: alphabet.csv
+        path: ./tap_csv/tests/data/
         keys:
         - col1
       add_metadata_columns: false
@@ -29,7 +30,7 @@ plugins:
         label: CSV Files Definition
         placeholder: Ex. files-def.json
       - name: add_metadata_columns
-        description: Specifies whether to add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to stream output
+        description: When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output.
         kind: boolean
   loaders:
   - name: target-jsonl

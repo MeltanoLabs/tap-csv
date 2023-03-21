@@ -33,7 +33,9 @@ class CSVStream(Stream):
         require partitioning and should ignore the `context` argument.
         """
         for file_path in self.get_file_paths():
-            file_last_modified = datetime.fromtimestamp(os.path.getmtime(file_path), timezone.utc)
+            file_last_modified = datetime.fromtimestamp(
+                os.path.getmtime(file_path), timezone.utc
+            )
 
             file_lineno = -1
 
@@ -87,7 +89,9 @@ class CSVStream(Stream):
         if file_path[-4:] != ".csv":
             is_valid = False
             self.logger.warning(f"Skipping non-csv file '{file_path}'")
-            self.logger.warning("Please provide a CSV file that ends with '.csv'; e.g. 'users.csv'")
+            self.logger.warning(
+                "Please provide a CSV file that ends with '.csv'; e.g. 'users.csv'"
+            )
         return is_valid
 
     def get_rows(self, file_path: str) -> Iterable[list]:
@@ -124,7 +128,11 @@ class CSVStream(Stream):
 
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_columns", False):
-            header = [SDC_SOURCE_FILE_COLUMN, SDC_SOURCE_FILE_MTIME_COLUMN, SDC_SOURCE_LINENO_COLUMN] + header
+            header = [
+                SDC_SOURCE_FILE_COLUMN,
+                SDC_SOURCE_FILE_MTIME_COLUMN,
+                SDC_SOURCE_LINENO_COLUMN,
+            ] + header
 
         for column in header:
             # Set all types to string

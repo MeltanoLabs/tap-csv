@@ -18,16 +18,19 @@ plugins:
         file: alphabet.csv
         keys:
         - col1
+      add_metadata_columns: false
     settings:
-      - description: Array of objects containing keys - `entity`, `file`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
+      - name: files
+        description: Array of objects containing keys - `entity`, `file`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
         kind: array
-        name: files
-      - description: Project-relative path to JSON file holding array of objects with
-          keys: `entity`, `file`, `keys`, and `encoding` (Optional).
+      - name: csv_files_definition
+        description: "Project-relative path to JSON file holding array of objects with keys: `entity`, `file`, `keys`, and `encoding` (Optional)."
         documentation: https://gitlab.com/meltano/tap-csv#run
         label: CSV Files Definition
-        name: csv_files_definition
         placeholder: Ex. files-def.json
+      - name: add_metadata_columns
+        description: Specifies whether to add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to stream output
+        kind: boolean
   loaders:
   - name: target-jsonl
     variant: andyh1203

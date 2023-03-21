@@ -2,16 +2,22 @@
 
 import csv
 import os
+from datetime import datetime, timezone
 from typing import Iterable, List, Optional
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
+
+SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
+SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
+SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 
 
 class CSVStream(Stream):
     """Stream class for CSV streams."""
 
     file_paths: List[str] = []
+    header: List[str] = []
 
     def __init__(self, *args, **kwargs):
         """Init CSVStram."""
@@ -27,12 +33,20 @@ class CSVStream(Stream):
         require partitioning and should ignore the `context` argument.
         """
         for file_path in self.get_file_paths():
-            headers: List[str] = []
+            file_last_modified = datetime.fromtimestamp(os.path.getmtime(file_path), timezone.utc)
+
+            file_lineno = -1
+
             for row in self.get_rows(file_path):
-                if not headers:
-                    headers = row
+                file_lineno += 1
+
+                if not file_lineno:
                     continue
-                yield dict(zip(headers, row))
+
+                if self.config.get("add_metadata_columns", False):
+                    row = [file_path, file_last_modified, file_lineno] + row
+
+                yield dict(zip(self.header, row))
 
     def get_file_paths(self) -> list:
         """Return a list of file paths to read.
@@ -73,9 +87,7 @@ class CSVStream(Stream):
         if file_path[-4:] != ".csv":
             is_valid = False
             self.logger.warning(f"Skipping non-csv file '{file_path}'")
-            self.logger.warning(
-                "Please provide a CSV file that ends with '.csv'; e.g. 'users.csv'"
-            )
+            self.logger.warning("Please provide a CSV file that ends with '.csv'; e.g. 'users.csv'")
         return is_valid
 
     def get_rows(self, file_path: str) -> Iterable[list]:
@@ -110,8 +122,16 @@ class CSVStream(Stream):
                 break
             break
 
+        # If enabled, add file's metadata to output
+        if self.config.get("add_metadata_columns", False):
+            header = [SDC_SOURCE_FILE_COLUMN, SDC_SOURCE_FILE_MTIME_COLUMN, SDC_SOURCE_LINENO_COLUMN] + header
+
         for column in header:
             # Set all types to string
             # TODO: Try to be smarter about inferring types.
             properties.append(th.Property(column, th.StringType()))
+
+        # Cache header for future use
+        self.header = header
+
         return th.PropertiesList(*properties).to_dict()

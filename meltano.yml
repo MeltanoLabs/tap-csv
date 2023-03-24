@@ -22,10 +22,10 @@ plugins:
       add_metadata_columns: false
     settings:
       - name: files
-        description: Array of objects containing keys - `entity`, `file`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
+        description: Array of objects containing keys - `entity`, `path`, `keys`, `encoding` (Optional), `delimiter` (Optional), `doublequote` (Optional), `escapechar` (Optional), `quotechar` (Optional), `skipinitialspace` (Optional), `strict` (Optional)
         kind: array
       - name: csv_files_definition
-        description: "Project-relative path to JSON file holding array of objects with keys: `entity`, `file`, `keys`, and `encoding` (Optional)."
+        description: "Project-relative path to JSON file holding array of objects with keys: `entity`, `path`, `keys`, and `encoding` (Optional)."
         documentation: https://gitlab.com/meltano/tap-csv#run
         label: CSV Files Definition
         placeholder: Ex. files-def.json

@@ -50,6 +50,17 @@ class CSVStream(Stream):
 
                 yield dict(zip(self.header, row))
 
+    def _get_recursive_file_paths(self, file_path: str) -> list:
+        file_paths = []
+
+        for dirpath, _, filenames in os.walk(file_path):
+            for filename in filenames:
+                file_path = os.path.join(dirpath, filename)
+                if self.is_valid_filename(file_path):
+                    file_paths.append(file_path)
+
+        return file_paths
+
     def get_file_paths(self) -> list:
         """Return a list of file paths to read.
 
@@ -67,10 +78,7 @@ class CSVStream(Stream):
         file_paths = []
         if os.path.isdir(file_path):
             clean_file_path = os.path.normpath(file_path) + os.sep
-            for filename in os.listdir(clean_file_path):
-                file_path = clean_file_path + filename
-                if self.is_valid_filename(file_path):
-                    file_paths.append(file_path)
+            file_paths = self._get_recursive_file_paths(clean_file_path)
         else:
             if self.is_valid_filename(file_path):
                 file_paths.append(file_path)

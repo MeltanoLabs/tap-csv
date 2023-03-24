@@ -67,10 +67,11 @@ class CSVStream(Stream):
         file_paths = []
         if os.path.isdir(file_path):
             clean_file_path = os.path.normpath(file_path) + os.sep
-            for filename in os.listdir(clean_file_path):
-                file_path = clean_file_path + filename
-                if self.is_valid_filename(file_path):
-                    file_paths.append(file_path)
+            for dirpath, _, filenames in os.walk(clean_file_path):
+                for filename in filenames:
+                    file_path = os.path.join(dirpath, filename)
+                    if self.is_valid_filename(file_path):
+                        file_paths.append(file_path)
         else:
             if self.is_valid_filename(file_path):
                 file_paths.append(file_path)

@@ -134,6 +134,11 @@ class CSVStream(Stream):
                 break
             break
 
+        for column in header:
+            # Set all types to string
+            # TODO: Try to be smarter about inferring types.
+            properties.append(th.Property(column, th.StringType()))
+
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_columns", False):
             header = [
@@ -141,11 +146,10 @@ class CSVStream(Stream):
                 SDC_SOURCE_FILE_MTIME_COLUMN,
                 SDC_SOURCE_LINENO_COLUMN,
             ] + header
-
-        for column in header:
-            # Set all types to string
-            # TODO: Try to be smarter about inferring types.
-            properties.append(th.Property(column, th.StringType()))
+            
+            properties.append(th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType))
+            properties.append(th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType))
+            properties.append(th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType))
 
         # Cache header for future use
         self.header = header

@@ -146,9 +146,11 @@ class CSVStream(Stream):
                 SDC_SOURCE_FILE_MTIME_COLUMN,
                 SDC_SOURCE_LINENO_COLUMN,
             ] + header
-            
+
             properties.append(th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType))
-            properties.append(th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType))
+            properties.append(
+                th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType)
+            )
             properties.append(th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType))
 
         # Cache header for future use

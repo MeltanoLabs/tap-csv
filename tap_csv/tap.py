@@ -7,6 +7,7 @@ from typing import List
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 from singer_sdk.helpers._classproperty import classproperty
+from singer_sdk.helpers.capabilities import TapCapabilities
 
 from tap_csv.client import CSVStream
 
@@ -55,9 +56,12 @@ class TapCSV(Tap):
     ).to_dict()
 
     @classproperty
-    def capabilities(self) -> List[str]:
+    def capabilities(self) -> List[TapCapabilities]:
         """Get tap capabilites."""
-        return ["sync", "catalog", "discover"]
+        return [
+            TapCapabilities.CATALOG,
+            TapCapabilities.DISCOVER,
+        ]
 
     def get_file_configs(self) -> List[dict]:
         """Return a list of file configs.

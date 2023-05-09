@@ -5,9 +5,7 @@ plugins:
   extractors:
   - name: tap-csv
     namespace: tap_csv
-    # TODO: To test using Meltano, replace with absolute path
-    #       to the tap-csv.sh script:
-    executable: ./tap-csv.sh
+    executable: -e .
     capabilities:
     - state
     - catalog

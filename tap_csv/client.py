@@ -48,6 +48,10 @@ class CSVStream(Stream):
                 if self.config.get("add_metadata_columns", False):
                     row = [file_path, file_last_modified, file_lineno] + row
 
+                if self.config.get("add_metadata_dict", False):
+                    metadata_dict={"source": "dummy.csv", "time_extracted": "234"}
+                    row = [str(metadata_dict)] + row
+
                 yield dict(zip(self.header, row))
 
     def _get_recursive_file_paths(self, file_path: str) -> list:

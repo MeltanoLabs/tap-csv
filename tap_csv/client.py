@@ -156,7 +156,7 @@ class CSVStream(Stream):
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_dict", False):
             header = [
-                METADATA_COLUMN
+                METADATA_COLUMN,
             ] + header
 
             properties.append(th.Property(metadata, th.Dict))

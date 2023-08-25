@@ -11,7 +11,7 @@ from singer_sdk.streams import Stream
 SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
 SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
 SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
-
+METADATA_COLUMN = "metadata"
 
 class CSVStream(Stream):
     """Stream class for CSV streams."""
@@ -156,7 +156,7 @@ class CSVStream(Stream):
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_dict", False):
             header = [
-                metadata
+                METADATA_COLUMN
             ] + header
 
             properties.append(th.Property(metadata, th.Dict))

@@ -53,6 +53,15 @@ class TapCSV(Tap):
                 "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output."
             ),
         ),
+        th.Property(
+            "add_metadata_dict",
+            th.BooleanType,
+            required=False,
+            default=False,
+            description=(
+                "When True, adds basic metadata as dict"
+            ),
+        ),
     ).to_dict()
 
     @classproperty

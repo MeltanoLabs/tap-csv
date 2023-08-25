@@ -50,7 +50,7 @@ class CSVStream(Stream):
 
                 if self.config.get("add_metadata_dict", False):
                     metadata_dict={"source": "dummy.csv", "time_extracted": "234"}
-                    row = [str(metadata_dict)] + row
+                    row = [metadata_dict] + row
 
                 yield dict(zip(self.header, row))
 

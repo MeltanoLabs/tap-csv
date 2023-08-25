@@ -159,7 +159,12 @@ class CSVStream(Stream):
                 METADATA_COLUMN,
             ] + header
 
-            properties.append(th.Property(METADATA_COLUMN, th.ObjectType))
+            t = ObjectType(
+                Property("source", StringType),
+                Property("time_extracted", StringType),
+                additional_properties=False,
+                )
+            properties.append(th.Property(METADATA_COLUMN, t))
         # Cache header for future use
         self.header = header
 

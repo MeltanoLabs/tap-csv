@@ -3,7 +3,7 @@
 import csv
 import os
 from datetime import datetime, timezone
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Dict
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
@@ -152,7 +152,14 @@ class CSVStream(Stream):
                 th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType)
             )
             properties.append(th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType))
+  
+        # If enabled, add file's metadata to output
+        if self.config.get("add_metadata_dict", False):
+            header = [
+                metadata
+            ] + header
 
+            properties.append(th.Property(metadata, th.Dict))
         # Cache header for future use
         self.header = header
 

@@ -1,9 +1,11 @@
 """Custom client handling, including CSVStream base class."""
 
+from __future__ import annotations
+
 import csv
 import os
 from datetime import datetime, timezone
-from typing import Iterable, List, Optional
+from typing import Iterable, List
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
@@ -16,8 +18,8 @@ SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 class CSVStream(Stream):
     """Stream class for CSV streams."""
 
-    file_paths: List[str] = []
-    header: List[str] = []
+    file_paths: list[str] = []  # noqa: RUF012
+    header: list[str] = []  # noqa: RUF012
 
     def __init__(self, *args, **kwargs):
         """Init CSVStram."""
@@ -25,7 +27,7 @@ class CSVStream(Stream):
         self.file_config = kwargs.pop("file_config")
         super().__init__(*args, **kwargs)
 
-    def get_records(self, context: Optional[dict]) -> Iterable[dict]:
+    def get_records(self, context: dict | None) -> Iterable[dict]:
         """Return a generator of row-type dictionary objects.
 
         The optional `context` argument is used to identify a specific slice of the
@@ -46,7 +48,7 @@ class CSVStream(Stream):
                     continue
 
                 if self.config.get("add_metadata_columns", False):
-                    row = [file_path, file_last_modified, file_lineno] + row
+                    row = [file_path, file_last_modified, file_lineno, *row]
 
                 yield dict(zip(self.header, row))
 
@@ -79,12 +81,11 @@ class CSVStream(Stream):
         if os.path.isdir(file_path):
             clean_file_path = os.path.normpath(file_path) + os.sep
             file_paths = self._get_recursive_file_paths(clean_file_path)
-        else:
-            if self.is_valid_filename(file_path):
-                file_paths.append(file_path)
+        elif self.is_valid_filename(file_path):
+            file_paths.append(file_path)
 
         if not file_paths:
-            raise Exception(
+            raise RuntimeError(
                 f"Stream '{self.name}' has no acceptable files. \
                     See warning for more detail."
             )
@@ -114,10 +115,8 @@ class CSVStream(Stream):
             skipinitialspace=self.file_config.get("skipinitialspace", False),
             strict=self.file_config.get("strict", False),
         )
-        with open(file_path, "r", encoding=encoding) as f:
-            reader = csv.reader(f, dialect="tap_dialect")
-            for row in reader:
-                yield row
+        with open(file_path, encoding=encoding) as f:
+            yield from csv.reader(f, dialect="tap_dialect")
 
     @property
     def schema(self) -> dict:
@@ -126,33 +125,31 @@ class CSVStream(Stream):
         Dynamically detect the json schema for the stream.
         This is evaluated prior to any records being retrieved.
         """
-        properties: List[th.Property] = []
+        properties: list[th.Property] = []
         self.primary_keys = self.file_config.get("keys", [])
 
         for file_path in self.get_file_paths():
-            for header in self.get_rows(file_path):
+            for header in self.get_rows(file_path):  # noqa: B007
                 break
             break
 
-        for column in header:
-            # Set all types to string
-            # TODO: Try to be smarter about inferring types.
-            properties.append(th.Property(column, th.StringType()))
-
+        properties.extend(th.Property(column, th.StringType()) for column in header)
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_columns", False):
             header = [
                 SDC_SOURCE_FILE_COLUMN,
                 SDC_SOURCE_FILE_MTIME_COLUMN,
                 SDC_SOURCE_LINENO_COLUMN,
-            ] + header
+                *header,
+            ]
 
-            properties.append(th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType))
-            properties.append(
-                th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType)
+            properties.extend(
+                (
+                    th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType),
+                    th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType),
+                    th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType),
+                )
             )
-            properties.append(th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType))
-
         # Cache header for future use
         self.header = header
 

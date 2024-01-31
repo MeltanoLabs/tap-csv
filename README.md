@@ -23,7 +23,7 @@ Note: This tap currently does not support incremental state.
 
 A full list of supported settings and capabilities is available by running: `tap-csv --about`
 
-The `config.json` contains an array called `files` that consists of dictionary objects detailing each destination table to be passed to Singer. Each of those entries contains: 
+The `config.json` contains an array called `files` that consists of dictionary objects detailing each destination table to be passed to Singer. Each of those entries contains:
 * `entity`: The entity name to be passed to singer (i.e. the table)
 * `path`: Local path to the file to be ingested. Note that this may be a directory, in which case all files in that directory and any of its subdirectories will be recursively processed
 * `keys`: The names of the columns that constitute the unique keys for that entity
@@ -41,7 +41,7 @@ Example:
 
 ```json
 {
-	"files":	[ 	
+	"files":	[
 					{	"entity" : "leads",
 						"path" : "/path/to/leads.csv",
 						"keys" : ["Id"],
@@ -69,7 +69,7 @@ Optionally, the files definition can be provided by an external json file:
 
 **files_def.json**
 ```json
-[ 	
+[
 	{	"entity" : "leads",
 		"path" : "/path/to/leads.csv",
 		"keys" : ["Id"]
@@ -155,5 +155,5 @@ meltano elt tap-csv target-jsonl
 
 ### SDK Dev Guide
 
-See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to 
+See the [dev guide](https://sdk.meltano.com/en/latest/dev_guide.html) for more instructions on how to use the SDK to
 develop your own taps and targets.

@@ -1,5 +1,7 @@
 """Tests standard tap features using the built-in SDK tests library."""
 
+from __future__ import annotations
+
 import os
 
 from singer_sdk.testing import get_standard_tap_tests
@@ -46,9 +48,9 @@ def test_standard_tap_tests_encoding():
 
 # Run standard built-in tap tests from the SDK, with different CSV dialect settings:
 def test_standard_tap_tests_csv_dialect():
-    """
-    Run standard built-in tap tests from the SDK, with different
-    CSV dialect settings.
+    """Run standard built-in tap tests from the SDK.
+
+    With different CSV dialect settings.
     """
     test_data_dir = os.path.dirname(os.path.abspath(__file__))
     SAMPLE_CONFIG = {
@@ -73,7 +75,7 @@ def test_standard_tap_tests_csv_dialect():
 
 # Run standard built-in tap tests from the SDK, with metadata columns included:
 def test_standard_tap_tests_metadata_cols():
-    """Run standard tap tests from the SDK, with metadata columns included"""
+    """Run standard tap tests from the SDK, with metadata columns included."""
     test_data_dir = os.path.dirname(os.path.abspath(__file__))
     SAMPLE_CONFIG = {
         "add_metadata_columns": True,

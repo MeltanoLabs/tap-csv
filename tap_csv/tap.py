@@ -1,5 +1,7 @@
 """CSV tap class."""
 
+from __future__ import annotations
+
 import json
 import os
 from typing import List
@@ -56,14 +58,14 @@ class TapCSV(Tap):
     ).to_dict()
 
     @classproperty
-    def capabilities(self) -> List[TapCapabilities]:
+    def capabilities(self) -> list[TapCapabilities]:
         """Get tap capabilites."""
         return [
             TapCapabilities.CATALOG,
             TapCapabilities.DISCOVER,
         ]
 
-    def get_file_configs(self) -> List[dict]:
+    def get_file_configs(self) -> list[dict]:
         """Return a list of file configs.
 
         Either directly from the config.json or in an external file
@@ -73,7 +75,7 @@ class TapCSV(Tap):
         csv_files_definition = self.config.get("csv_files_definition")
         if csv_files_definition:
             if os.path.isfile(csv_files_definition):
-                with open(csv_files_definition, "r") as f:
+                with open(csv_files_definition) as f:
                     csv_files = json.load(f)
             else:
                 self.logger.error(f"tap-csv: '{csv_files_definition}' file not found")
@@ -83,7 +85,7 @@ class TapCSV(Tap):
             exit(1)
         return csv_files
 
-    def discover_streams(self) -> List[Stream]:
+    def discover_streams(self) -> list[Stream]:
         """Return a list of discovered streams."""
         return [
             CSVStream(

@@ -1,5 +1,7 @@
 """Tests client methods."""
 
+from __future__ import annotations
+
 import os
 
 from tap_csv.tap import CSVStream, TapCSV

@@ -3,7 +3,7 @@
 import csv
 import os
 from datetime import datetime, timezone
-from typing import Iterable, List, Optional
+from typing import Iterable, List, Optional, Dict
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
@@ -11,7 +11,7 @@ from singer_sdk.streams import Stream
 SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
 SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
 SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
-
+METADATA_COLUMN = "metadata"
 
 class CSVStream(Stream):
     """Stream class for CSV streams."""
@@ -47,6 +47,10 @@ class CSVStream(Stream):
 
                 if self.config.get("add_metadata_columns", False):
                     row = [file_path, file_last_modified, file_lineno] + row
+
+                if self.config.get("add_metadata_dict", False):
+                    metadata_dict={"source": file_path, "time_extracted": datetime.utcnow()}
+                    row = [metadata_dict] + row
 
                 yield dict(zip(self.header, row))
 
@@ -152,7 +156,19 @@ class CSVStream(Stream):
                 th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType)
             )
             properties.append(th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType))
+  
+        # If enabled, add file's metadata to output
+        if self.config.get("add_metadata_dict", False):
+            header = [
+                METADATA_COLUMN,
+            ] + header
 
+            t = th.ObjectType(
+                th.Property("source", th.StringType),
+                th.Property("time_extracted", th.StringType),
+                additional_properties=False,
+                )
+            properties.append(th.Property(METADATA_COLUMN, t))
         # Cache header for future use
         self.header = header
 

@@ -9,7 +9,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      PIP_CONSTRAINT: .github/workflows/constraints.txt
+      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     strategy:
       matrix:
         # Only lint using the primary version used for dev
@@ -39,7 +39,7 @@ jobs:
     env:
       CLIENT_SECRETS: ${{ secrets.GA_CLIENT_SECRETS }}
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      PIP_CONSTRAINT: .github/workflows/constraints.txt
+      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     strategy:
       matrix:
         python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]

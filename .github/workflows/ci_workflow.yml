@@ -16,13 +16,13 @@ jobs:
         python-version: [3.9]
 
     steps:
-    - uses: actions/checkout@v4.1.7
+    - uses: actions/checkout@v4
     - name: Install Poetry
       run: |
         pipx install poetry
         poetry --version
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5.1.1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: poetry
@@ -42,16 +42,21 @@ jobs:
       PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version:
+        - "3.8"
+        - "3.9"
+        - "3.10"
+        - "3.11"
+        - "3.12"
 
     steps:
-    - uses: actions/checkout@v4.1.7
+    - uses: actions/checkout@v4
     - name: Install Poetry
       run: |
         pipx install poetry
         poetry --version
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5.1.1
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         cache: poetry

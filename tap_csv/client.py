@@ -4,11 +4,14 @@ from __future__ import annotations
 
 import csv
 import os
+import typing as t
 from datetime import datetime, timezone
-from typing import Iterable, List
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
+
+if t.TYPE_CHECKING:
+    from singer_sdk.helpers.types import Context
 
 SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
 SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
@@ -27,7 +30,7 @@ class CSVStream(Stream):
         self.file_config = kwargs.pop("file_config")
         super().__init__(*args, **kwargs)
 
-    def get_records(self, context: dict | None) -> Iterable[dict]:
+    def get_records(self, context: Context | None) -> t.Iterable[dict]:
         """Return a generator of row-type dictionary objects.
 
         The optional `context` argument is used to identify a specific slice of the
@@ -103,7 +106,7 @@ class CSVStream(Stream):
             )
         return is_valid
 
-    def get_rows(self, file_path: str) -> Iterable[list]:
+    def get_rows(self, file_path: str) -> t.Iterable[list]:
         """Return a generator of the rows in a particular CSV file."""
         encoding = self.file_config.get("encoding", None)
         csv.register_dialect(

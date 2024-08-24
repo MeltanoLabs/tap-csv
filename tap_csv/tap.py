@@ -4,10 +4,10 @@ from __future__ import annotations
 
 import json
 import os
-from typing import List
 
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk.exceptions import ConfigValidationError
 from singer_sdk.helpers._classproperty import classproperty
 from singer_sdk.helpers.capabilities import TapCapabilities
 
@@ -20,6 +20,37 @@ class TapCSV(Tap):
     name = "tap-csv"
 
     config_jsonschema = th.PropertiesList(
+        th.Property(
+            "filesystem",
+            th.StringType,
+            required=False,
+            default="local",
+            description="The filesystem to use for reading files.",
+            allowed_values=[
+                "local",
+                "ftp",
+                "github",
+            ],
+        ),
+        th.Property(
+            "ftp",
+            th.ObjectType(
+                th.Property("host", th.StringType, required=True),
+                th.Property("port", th.IntegerType, default=21),
+                th.Property("username", th.StringType),
+                th.Property("password", th.StringType, secret=True),
+                th.Property("encoding", th.StringType, default="utf-8"),
+            ),
+        ),
+        th.Property(
+            "github",
+            th.ObjectType(
+                th.Property("org", th.StringType, required=True),
+                th.Property("repo", th.StringType, required=True),
+                th.Property("username", th.StringType, required=False),
+                th.Property("token", th.StringType, required=False, secret=True),
+            ),
+        ),
         th.Property(
             "files",
             th.ArrayType(
@@ -59,7 +90,7 @@ class TapCSV(Tap):
 
     @classproperty
     def capabilities(self) -> list[TapCapabilities]:
-        """Get tap capabilites."""
+        """Get tap capabilities."""
         return [
             TapCapabilities.CATALOG,
             TapCapabilities.DISCOVER,
@@ -87,11 +118,22 @@ class TapCSV(Tap):
 
     def discover_streams(self) -> list[Stream]:
         """Return a list of discovered streams."""
+        filesystem = self.config["filesystem"]
+
+        if filesystem != "local" and filesystem not in self.config:
+            error_message = f"Missing filesystem options for {filesystem}"
+            raise ConfigValidationError(
+                "Misconfigured filesystem",
+                errors=[error_message],
+            )
+
         return [
             CSVStream(
                 tap=self,
                 name=file_config.get("entity"),
                 file_config=file_config,
+                filesystem=filesystem,
+                options=self.config.get(filesystem, {}),
             )
             for file_config in self.get_file_configs()
         ]

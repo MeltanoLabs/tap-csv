@@ -25,6 +25,8 @@ def test_get_file_paths_recursively():
         tap=TapCSV(config=SAMPLE_CONFIG, catalog={}, state={}),
         name="test_recursive",
         file_config=SAMPLE_CONFIG.get("files")[0],
+        filesystem="local",
+        options={},
     )
     assert stream.get_file_paths() == [
         f"{test_data_dir}/data/subfolder1/alphabet.csv",

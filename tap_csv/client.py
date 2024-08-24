@@ -5,8 +5,8 @@ from __future__ import annotations
 import csv
 import os
 import typing as t
-from datetime import datetime, timezone
 
+import fsspec
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
 
@@ -24,10 +24,11 @@ class CSVStream(Stream):
     file_paths: list[str] = []  # noqa: RUF012
     header: list[str] = []  # noqa: RUF012
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, filesystem: str, *args, options: dict[str, t.Any], **kwargs):
         """Init CSVStram."""
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
+        self.fs = fsspec.filesystem(filesystem, **options)
         super().__init__(*args, **kwargs)
 
     def get_records(self, context: Context | None) -> t.Iterable[dict]:
@@ -38,9 +39,15 @@ class CSVStream(Stream):
         require partitioning and should ignore the `context` argument.
         """
         for file_path in self.get_file_paths():
-            file_last_modified = datetime.fromtimestamp(
-                os.path.getmtime(file_path), timezone.utc
-            )
+            self.logger.info("Reading file at %s", file_path)
+            try:
+                file_last_modified = self.fs.modified(file_path)
+            except NotImplementedError:
+                self.logger.warning(
+                    "Filesystem implementation for %s does not support modified time, skipping",
+                    self.fs.protocol,
+                )
+                file_last_modified = None
 
             file_lineno = -1
 
@@ -58,7 +65,7 @@ class CSVStream(Stream):
     def _get_recursive_file_paths(self, file_path: str) -> list:
         file_paths = []
 
-        for dirpath, _, filenames in os.walk(file_path):
+        for dirpath, _, filenames in self.fs.walk(file_path):
             for filename in filenames:
                 file_path = os.path.join(dirpath, filename)
                 if self.is_valid_filename(file_path):
@@ -77,13 +84,14 @@ class CSVStream(Stream):
             return self.file_paths
 
         file_path = self.file_config["path"]
-        if not os.path.exists(file_path):
+        if not self.fs.exists(file_path):
             raise Exception(f"File path does not exist {file_path}")
 
         file_paths = []
-        if os.path.isdir(file_path):
+        if self.fs.isdir(file_path):
             clean_file_path = os.path.normpath(file_path) + os.sep
             file_paths = self._get_recursive_file_paths(clean_file_path)
+
         elif self.is_valid_filename(file_path):
             file_paths.append(file_path)
 
@@ -118,7 +126,7 @@ class CSVStream(Stream):
             skipinitialspace=self.file_config.get("skipinitialspace", False),
             strict=self.file_config.get("strict", False),
         )
-        with open(file_path, encoding=encoding) as f:
+        with self.fs.open(file_path, mode="r", encoding=encoding) as f:
             yield from csv.reader(f, dialect="tap_dialect")
 
     @property

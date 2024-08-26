@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "tap-csv"
-version = "1.0.1"
-description = "`tap-csv` is a Singer tap for CSV, built with the Meltano SDK for Singer Taps."
+version = "1.1.0"
+description = "Singer tap for CSV, built with the Meltano SDK for Singer Taps."
 authors = ["Pat Nadolny"]
 keywords = [
     "ELT",
@@ -23,7 +23,7 @@ ruff = ">=0.1.15"
 types-requests = ">=2.31.0"
 
 [build-system]
-requires = ["poetry-core==1.8.1"]
+requires = ["poetry-core==1.9.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]

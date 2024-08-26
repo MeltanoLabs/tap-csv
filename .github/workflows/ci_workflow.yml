@@ -2,7 +2,28 @@
 
 name: Test tap-csv
 
-on: [push]
+on:
+  push:
+    branches: [main]
+    paths:
+    - .github/workflows/test.yml
+    - tap_csv/**
+    - tap_csv/tests/**  # TODO: move this out of the package dir
+    - poetry.lock
+    - pyproject.toml
+    - tox.ini
+  pull_request:
+    branches: [main]
+    paths:
+    - .github/workflows/test.yml
+    - tap_csv/**
+    - tap_csv/tests/**  # TODO: move this out of the package dir
+    - poetry.lock
+    - pyproject.toml
+    - tox.ini
+  schedule:
+  - cron: "0 10 * * *"
+  workflow_dispatch:
 
 jobs:
   linting:

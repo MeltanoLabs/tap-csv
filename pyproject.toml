@@ -12,7 +12,7 @@ license = "Apache-2.0"
 [tool.poetry.dependencies]
 python = ">=3.8"
 fsspec = "~=2024.6.1"
-singer-sdk = "~=0.39.0"
+singer-sdk = "~=0.40.0"
 universal-pathlib = "~=0.2.3"
 
 [tool.poetry.group.dev.dependencies]

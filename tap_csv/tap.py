@@ -21,37 +21,6 @@ class TapCSV(Tap):
 
     config_jsonschema = th.PropertiesList(
         th.Property(
-            "filesystem",
-            th.StringType,
-            required=False,
-            default="local",
-            description="The filesystem to use for reading files.",
-            allowed_values=[
-                "local",
-                "ftp",
-                "github",
-            ],
-        ),
-        th.Property(
-            "ftp",
-            th.ObjectType(
-                th.Property("host", th.StringType, required=True),
-                th.Property("port", th.IntegerType, default=21),
-                th.Property("username", th.StringType),
-                th.Property("password", th.StringType, secret=True),
-                th.Property("encoding", th.StringType, default="utf-8"),
-            ),
-        ),
-        th.Property(
-            "github",
-            th.ObjectType(
-                th.Property("org", th.StringType, required=True),
-                th.Property("repo", th.StringType, required=True),
-                th.Property("username", th.StringType, required=False),
-                th.Property("token", th.StringType, required=False, secret=True),
-            ),
-        ),
-        th.Property(
             "files",
             th.ArrayType(
                 th.ObjectType(
@@ -69,12 +38,90 @@ class TapCSV(Tap):
                     th.Property("strict", th.BooleanType, required=False),
                 )
             ),
-            description="An array of csv file stream settings.",
+            description="An array of csv file stream settings",
+        ),
+        th.Property(
+            "filesystem",
+            th.StringType,
+            required=False,
+            default="local",
+            description="The filesystem to use for reading files",
+            allowed_values=[
+                "local",
+                "ftp",
+                "github",
+            ],
+        ),
+        th.Property(
+            "ftp",
+            th.ObjectType(
+                th.Property(
+                    "host",
+                    th.StringType,
+                    required=True,
+                    description="FTP server host",
+                ),
+                th.Property(
+                    "port",
+                    th.IntegerType,
+                    default=21,
+                    description="FTP server port",
+                ),
+                th.Property(
+                    "username",
+                    th.StringType,
+                    description="FTP username",
+                ),
+                th.Property(
+                    "password",
+                    th.StringType,
+                    secret=True,
+                    description="FTP password",
+                ),
+                th.Property(
+                    "encoding",
+                    th.StringType,
+                    default="utf-8",
+                    description="FTP server encoding",
+                ),
+            ),
+            description="FTP connection settings",
+        ),
+        th.Property(
+            "github",
+            th.ObjectType(
+                th.Property(
+                    "org",
+                    th.StringType,
+                    required=True,
+                    description="GitHub organization or user where the repository is located",
+                ),
+                th.Property(
+                    "repo",
+                    th.StringType,
+                    required=True,
+                    description="GitHub repository",
+                ),
+                th.Property(
+                    "username",
+                    th.StringType,
+                    required=False,
+                    description="GitHub username",
+                ),
+                th.Property(
+                    "token",
+                    th.StringType,
+                    required=False,
+                    secret=True,
+                    description="GitHub token",
+                ),
+            ),
+            description="GitHub connection settings",
         ),
         th.Property(
             "csv_files_definition",
             th.StringType,
-            description="A path to the JSON file holding an array of file settings.",
+            description="A path to the JSON file holding an array of file settings",
         ),
         th.Property(
             "add_metadata_columns",
@@ -83,7 +130,7 @@ class TapCSV(Tap):
             default=False,
             description=(
                 "When True, add the metadata columns (`_sdc_source_file`, "
-                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output."
+                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output"
             ),
         ),
     ).to_dict()

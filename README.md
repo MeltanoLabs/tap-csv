@@ -15,11 +15,23 @@ Note: This tap currently does not support incremental state.
 
 ## Settings
 
-| Setting             | Required | Default | Description |
-|:--------------------|:--------:|:-------:|:------------|
-| files               | False    | None    | An array of csv file stream settings. |
-| csv_files_definition| False    | None    | A path to the JSON file holding an array of file settings. |
-| add_metadata_columns| False    | False   | When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output. |
+| Setting              | Required | Default | Description                                                                                                                                                                                                                                              |
+| :------------------- | :------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| files                | False    | None    | An array of csv file stream settings                                                                                                                                                                                                                     |
+| filesystem           | False    | local   | The filesystem to use for reading files                                                                                                                                                                                                                  |
+| ftp                  | False    | None    | FTP connection settings                                                                                                                                                                                                                                  |
+| ftp.host             | True     | None    | FTP server host                                                                                                                                                                                                                                          |
+| ftp.port             | False    | 21      | FTP server port                                                                                                                                                                                                                                          |
+| ftp.username         | False    | None    | FTP username                                                                                                                                                                                                                                             |
+| ftp.password         | False    | None    | FTP password                                                                                                                                                                                                                                             |
+| ftp.encoding         | False    | utf-8   | FTP server encoding                                                                                                                                                                                                                                      |
+| github               | False    | None    | GitHub connection settings                                                                                                                                                                                                                               |
+| github.org           | True     | None    | GitHub organization or user where the repository is located                                                                                                                                                                                              |
+| github.repo          | True     | None    | GitHub repository                                                                                                                                                                                                                                        |
+| github.username      | False    | None    | GitHub username                                                                                                                                                                                                                                          |
+| github.token         | False    | None    | GitHub token                                                                                                                                                                                                                                             |
+| csv_files_definition | False    | None    | A path to the JSON file holding an array of file settings                                                                                                                                                                                                |
+| add_metadata_columns | False    | 0       | When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output                                                                                                                                       |
 
 A full list of supported settings and capabilities is available by running: `tap-csv --about`
 
@@ -80,6 +92,20 @@ Optionally, the files definition can be provided by an external json file:
 	}
 ]
 ```
+
+### Built-in Singer SDK settings
+
+The following settings are supported by the Singer SDK and are automatically handled by the tap:
+
+| Setting              | Required | Default | Description                                                                                                                                                                                                                                              |
+| :------------------- | :------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| stream_maps          | False    | None    | Config object for stream maps capability. For more information check out [Stream Maps](https://sdk.meltano.com/en/latest/stream_maps.html).                                                                                                              |
+| stream_map_config    | False    | None    | User-defined config values to be used within map expressions.                                                                                                                                                                                            |
+| faker_config         | False    | None    | Config for the [`Faker`](https://faker.readthedocs.io/en/master/) instance variable `fake` used within map expressions. Only applicable if the plugin specifies `faker` as an addtional dependency (through the `singer-sdk` `faker` extra or directly). |
+| faker_config.seed    | False    | None    | Value to seed the Faker generator for deterministic output: https://faker.readthedocs.io/en/master/#seeding-the-generator                                                                                                                                |
+| faker_config.locale  | False    | None    | One or more LCID locale strings to produce localized output for: https://faker.readthedocs.io/en/master/#localization                                                                                                                                    |
+| flattening_enabled   | False    | None    | 'True' to enable schema flattening and automatically expand nested properties.                                                                                                                                                                           |
+| flattening_max_depth | False    | None    | The max depth to flatten schemas.                                                                                                                                                                                                                        |
 
 ## Installation
 

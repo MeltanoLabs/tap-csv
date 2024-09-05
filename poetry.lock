@@ -1402,4 +1402,4 @@ dropbox = ["dropboxdrivefs"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8"
-content-hash = "c218fd70889a2509ee65b9a3a85187112437dda863ae5249d0bbeb4bafc57bd1"
+content-hash = "dc24ddf88fb5ceb48c0cc09fc9f8ee7482a5e277bd23452d046a635fe8251792"

@@ -13,6 +13,7 @@ license = "Apache-2.0"
 python = ">=3.8"
 fsspec = "~=2024.6.1"
 singer-sdk = "~=0.40.0"
+typing-extensions = { version = "~=4.12.2", python = "<3.12" }
 universal-pathlib = "~=0.2.3"
 
 # Extras

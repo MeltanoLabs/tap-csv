@@ -19,23 +19,17 @@ Note: This tap currently does not support incremental state.
 | :------------------- | :------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
 | files                | False    | None    | An array of csv file stream settings                                                                               |
 | filesystem           | False    | local   | The filesystem to use for reading files                                                                            |
-| ftp                  | False    | None    | FTP connection settings                                                                                            |
-| ftp.host             | True     | None    | FTP server host                                                                                                    |
-| ftp.port             | False    | 21      | FTP server port                                                                                                    |
-| ftp.username         | False    | None    | FTP username                                                                                                       |
-| ftp.password         | False    | None    | FTP password                                                                                                       |
-| ftp.encoding         | False    | utf-8   | FTP server encoding                                                                                                |
-| github               | False    | None    | GitHub connection settings                                                                                         |
-| github.org           | True     | None    | GitHub organization or user where the repository is located                                                        |
-| github.repo          | True     | None    | GitHub repository                                                                                                  |
-| github.username      | False    | None    | GitHub username                                                                                                    |
-| github.token         | False    | None    | GitHub token                                                                                                       |
-| dropbox              | False    | None    | Dropbox connection settings                                                                                        |
-| dropbox.token        | True     | None    | Dropbox token                                                                                                      |
 | csv_files_definition | False    | None    | A path to the JSON file holding an array of file settings                                                          |
 | add_metadata_columns | False    | 0       | When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output |
 
 A full list of supported settings and capabilities is available by running: `tap-csv --about`
+
+The `filesystem` setting can be used to specify the filesystem to use for reading files. The following filesystems are supported:
+
+- `local`, the default, for reading files from the local filesystem.
+- [`ftp`](#ftp), for reading files from an FTP server.
+- [`github`](#github), for reading files from a GitHub repository.
+- [`dropbox`](#dropbox), for reading files from a Dropbox account.
 
 The `config.json` contains an array called `files` that consists of dictionary objects detailing each destination table to be passed to Singer. Each of those entries contains:
 * `entity`: The entity name to be passed to singer (i.e. the table)
@@ -94,6 +88,36 @@ Optionally, the files definition can be provided by an external json file:
 	}
 ]
 ```
+
+### Filesystem settings
+
+#### FTP
+
+| Setting      | Required | Default | Description             |
+| :----------- | :------- | :------ | :---------------------- |
+| ftp          | False    | None    | FTP connection settings |
+| ftp.host     | True     | None    | FTP server host         |
+| ftp.port     | False    | 21      | FTP server port         |
+| ftp.username | False    | None    | FTP username            |
+| ftp.password | False    | None    | FTP password            |
+| ftp.encoding | False    | utf-8   | FTP server encoding     |
+
+#### GitHub
+
+| Setting         | Required | Default | Description                                                 |
+| :-------------- | :------- | :------ | :---------------------------------------------------------- |
+| github          | False    | None    | GitHub connection settings                                  |
+| github.org      | True     | None    | GitHub organization or user where the repository is located |
+| github.repo     | True     | None    | GitHub repository                                           |
+| github.username | False    | None    | GitHub username                                             |
+| github.token    | False    | None    | GitHub token                                                |
+
+#### Dropbox
+
+| Setting       | Required | Default | Description                 |
+| :------------ | :------- | :------ | :-------------------------- |
+| dropbox       | False    | None    | Dropbox connection settings |
+| dropbox.token | True     | None    | Dropbox token               |
 
 ### Built-in Singer SDK settings
 

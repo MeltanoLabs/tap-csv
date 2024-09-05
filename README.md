@@ -119,6 +119,10 @@ Optionally, the files definition can be provided by an external json file:
 | dropbox       | False    | None    | Dropbox connection settings |
 | dropbox.token | True     | None    | Dropbox token               |
 
+The token needs the `files.content.read` scope:
+
+[![Dropbox scopes](img/dropbox_scopes.png)](https://www.dropbox.com/developers/apps)
+
 ### Built-in Singer SDK settings
 
 The following settings are supported by the Singer SDK and are automatically handled by the tap:

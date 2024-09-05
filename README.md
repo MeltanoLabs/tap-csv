@@ -112,6 +112,33 @@ Optionally, the files definition can be provided by an external json file:
 | github.username | False    | None    | GitHub username                                             |
 | github.token    | False    | None    | GitHub token                                                |
 
+<details><summary>Example configuration</summary>
+<p>
+
+```json
+{
+  "add_metadata_columns": true,
+  "filesystem": "github",
+  "github": {
+    "org": "MeltanoLabs",
+    "repo": "tap-csv"
+  },
+  "files": [
+    {
+      "entity": "alphabet",
+      "path": "tap_csv/tests/data/alphabet.csv",
+      "keys": [
+        "col1"
+      ]
+    }
+  ]
+}
+```
+
+</p>
+</details>
+
+
 #### Dropbox
 
 | Setting       | Required | Default | Description                 |
@@ -122,6 +149,31 @@ Optionally, the files definition can be provided by an external json file:
 The token needs the `files.content.read` scope:
 
 [![Dropbox scopes](img/dropbox_scopes.png)](https://www.dropbox.com/developers/apps)
+
+<details><summary>Example configuration</summary>
+<p>
+
+```json
+{
+  "add_metadata_columns": true,
+  "filesystem": "dropbox",
+  "dropbox": {
+	"token": "...."
+  },
+  "files": [
+    {
+      "entity": "alphabet",
+      "path": "/alphabet.csv",
+      "keys": [
+        "col1"
+      ]
+    }
+  ]
+}
+```
+
+</p>
+</details>
 
 ### Built-in Singer SDK settings
 

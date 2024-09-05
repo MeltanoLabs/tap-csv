@@ -95,7 +95,9 @@ class TapCSV(Tap):
                     "org",
                     th.StringType,
                     required=True,
-                    description="GitHub organization or user where the repository is located",
+                    description=(
+                        "GitHub organization or user where the repository is located"
+                    ),
                 ),
                 th.Property(
                     "repo",
@@ -170,7 +172,7 @@ class TapCSV(Tap):
                 with open(csv_files_definition) as f:
                     csv_files = json.load(f)
             else:
-                self.logger.error(f"tap-csv: '{csv_files_definition}' file not found")
+                self.logger.error("tap-csv: '%s' file not found", csv_files_definition)
                 exit(1)
         if not csv_files:
             self.logger.error("No CSV file definitions found.")
@@ -182,11 +184,9 @@ class TapCSV(Tap):
         filesystem = self.config["filesystem"]
 
         if filesystem != "local" and filesystem not in self.config:
-            error_message = f"Missing filesystem options for {filesystem}"
-            raise ConfigValidationError(
-                "Misconfigured filesystem",
-                errors=[error_message],
-            )
+            msg = "Misconfigured filesystem"
+            errors = [f"Missing filesystem options for {filesystem}"]
+            raise ConfigValidationError(msg, errors=errors)
 
         return [
             CSVStream(

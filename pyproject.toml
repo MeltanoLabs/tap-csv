@@ -49,18 +49,28 @@ ignore = [
     "D213",
 ]
 select = [
-    "F",
-    "A",
-    "B",
-    "W",
-    "D",
-    "COM",
-    "I",
-    # "PTH",
-    "PERF",
-    "RUF",
-    "TCH",
-    "UP",
+    "F",    # Pyflakes
+    "E",    # pycodestyle (errors)
+    "W",    # pycodestyle (warnings)
+    "D",    # pydocstyle
+    "UP",   # pyupgrade
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "A",    # flake8-builtins
+    "COM",  # flake8-commas
+    "EM",   # flake8-errmsg
+    "LOG",  # flake8-logging
+    "G",    # flake8-logging-format
+    "PIE",  # flake8-pie
+    "RSE",  # flake8-raise
+    "RET",  # flake8-return
+    "SLF",  # flake8-self
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "ERA",  # eradicate
+    "ARG",  # flake8-unused-arguments
+    "PERF", # Perflint
+    "RUF",  # Ruff-specific rules
 ]
 
 [tool.ruff.lint.isort]

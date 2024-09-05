@@ -8,25 +8,19 @@ import typing as t
 from functools import cached_property
 
 import fsspec
-from singer_sdk import typing as th
 from singer_sdk.streams import Stream
-
-SDC_SOURCE_FILE_COLUMN = "_sdc_source_file"
-SDC_SOURCE_LINENO_COLUMN = "_sdc_source_lineno"
-SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 
 
 class FileStream(Stream, metaclass=abc.ABCMeta):
     """Abstract class for file streams."""
 
-    file_paths: list[str] = []  # noqa: RUF012
-    header: list[str] = []  # noqa: RUF012
-
     def __init__(self, filesystem: str, *args, options: dict[str, t.Any], **kwargs):
         """Init CSVStram."""
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
-        self.fs = fsspec.filesystem(filesystem, **options)
+        self.fs: fsspec.AbstractFileSystem = fsspec.filesystem(filesystem, **options)
+        self._file_paths: list[str] = []
+
         super().__init__(*args, **kwargs)
 
     def _get_recursive_file_paths(self, file_path: str) -> list:
@@ -40,19 +34,20 @@ class FileStream(Stream, metaclass=abc.ABCMeta):
 
         return file_paths
 
-    def get_file_paths(self) -> list:
+    def get_file_paths(self) -> list[str]:
         """Return a list of file paths to read.
 
         This tap accepts file names and directories so it will detect
         directories and iterate files inside.
         """
         # Cache file paths so we dont have to iterate multiple times
-        if self.file_paths:
-            return self.file_paths
+        if self._file_paths:
+            return self._file_paths
 
         file_path = self.file_config["path"]
         if not self.fs.exists(file_path):
-            raise Exception(f"File path does not exist {file_path}")
+            errmsg = f"File path does not exist {file_path}"
+            raise Exception(errmsg)
 
         file_paths = []
         if self.fs.isdir(file_path):
@@ -63,16 +58,57 @@ class FileStream(Stream, metaclass=abc.ABCMeta):
             file_paths.append(file_path)
 
         if not file_paths:
-            raise RuntimeError(
-                f"Stream '{self.name}' has no acceptable files. \
-                    See warning for more detail."
-            )
-        self.file_paths = file_paths
-        return file_paths
+            msg = f"Stream '{self.name}' has no acceptable files"
+            raise RuntimeError(msg)
+
+        self._file_paths = file_paths
+
+        return self._file_paths
+
+    def get_all_field_names(self) -> list[str]:
+        """Return a set of all field names, including metadata columns.
+
+        If metadata columns are enabled, they will be **prepended** to the list.
+        """
+        fields = list(self.field_names)
+        if self.include_metadata_columns:
+            fields = [*self.metadata_fields, *fields]
+
+        return fields
+
+    @cached_property
+    def include_metadata_columns(self) -> bool:
+        """Return a boolean of whether to include metadata columns."""
+        return self.config.get("add_metadata_columns", False)
+
+    @property
+    def metadata_fields(self) -> t.Iterable[str]:
+        """Get an iterable of metadata columns names."""
+        return []
+
+    def get_metadata_columns_schemas(self) -> t.Iterable[tuple[str, dict]]:
+        """Get an iterable of metadata columns names and schemata."""
+        return []
+
+    @property
+    @abc.abstractmethod
+    def field_names(self) -> t.Sequence[str]:
+        """A sequence of field names for the stream."""
+        ...
+
+    @abc.abstractmethod
+    def get_schema(self) -> dict:
+        """Return the schema for a particular file stream."""
+        ...
 
     @abc.abstractmethod
     def is_valid_filename(self, file_path: str) -> bool:
         """Return a boolean of whether the file name is valid for the format."""
+        ...
+
+    @abc.abstractmethod
+    def get_rows(self, file_path: str) -> t.Iterable[list]:
+        """Return a generator of the rows in a particular file."""
         ...
 
     @cached_property
@@ -82,32 +118,11 @@ class FileStream(Stream, metaclass=abc.ABCMeta):
         Dynamically detect the json schema for the stream.
         This is evaluated prior to any records being retrieved.
         """
-        properties: list[th.Property] = []
-        self.primary_keys = self.file_config.get("keys", [])
+        _schema = self.get_schema()
 
-        for file_path in self.get_file_paths():
-            for header in self.get_rows(file_path):  # noqa: B007
-                break
-            break
-
-        properties.extend(th.Property(column, th.StringType()) for column in header)
         # If enabled, add file's metadata to output
-        if self.config.get("add_metadata_columns", False):
-            header = [
-                SDC_SOURCE_FILE_COLUMN,
-                SDC_SOURCE_FILE_MTIME_COLUMN,
-                SDC_SOURCE_LINENO_COLUMN,
-                *header,
-            ]
+        if self.include_metadata_columns:
+            metadata_schema = self.get_metadata_columns_schemas()
+            _schema["properties"].update(dict(metadata_schema))
 
-            properties.extend(
-                (
-                    th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType),
-                    th.Property(SDC_SOURCE_FILE_MTIME_COLUMN, th.DateTimeType),
-                    th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType),
-                )
-            )
-        # Cache header for future use
-        self.header = header
-
-        return th.PropertiesList(*properties).to_dict()
+        return _schema

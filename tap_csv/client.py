@@ -32,7 +32,7 @@ class CSVStream(FileStream):
         super().__init__(*args, **kwargs)
 
     @cached_property
-    def primary_keys(self) -> list[str]:
+    def primary_keys(self) -> t.Sequence[str] | None:
         """Return the primary keys for the stream."""
         return self.file_config.get("keys", [])
 

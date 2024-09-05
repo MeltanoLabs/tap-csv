@@ -11,6 +11,10 @@ import fsspec
 from singer_sdk.streams import Stream
 
 
+class FileStreamError(Exception):
+    """Exception for file stream errors."""
+
+
 class FileStream(Stream, metaclass=abc.ABCMeta):
     """Abstract class for file streams."""
 
@@ -47,7 +51,7 @@ class FileStream(Stream, metaclass=abc.ABCMeta):
         file_path = self.file_config["path"]
         if not self.fs.exists(file_path):
             errmsg = f"File path does not exist {file_path}"
-            raise Exception(errmsg)
+            raise FileStreamError(errmsg)
 
         file_paths = []
         if self.fs.isdir(file_path):
@@ -59,7 +63,7 @@ class FileStream(Stream, metaclass=abc.ABCMeta):
 
         if not file_paths:
             msg = f"Stream '{self.name}' has no acceptable files"
-            raise RuntimeError(msg)
+            raise FileStreamError(msg)
 
         self._file_paths = file_paths
 

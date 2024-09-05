@@ -48,7 +48,7 @@ plugins:
       - name: ftp.password
         label: FTP Password
         description: Password for the FTP server
-        kind: string
+        kind: password
         sensitive: true
       - name: ftp.encoding
         label: FTP Encoding
@@ -71,7 +71,7 @@ plugins:
       - name: github.token
         label: GitHub Token
         description: Token for GitHub
-        kind: string
+        kind: password
         sensitive: true
 
       - name: files

@@ -50,6 +50,7 @@ class TapCSV(Tap):
                 "local",
                 "ftp",
                 "github",
+                "dropbox",
             ],
         ),
         th.Property(
@@ -117,6 +118,19 @@ class TapCSV(Tap):
                 ),
             ),
             description="GitHub connection settings",
+        ),
+        th.Property(
+            "dropbox",
+            th.ObjectType(
+                th.Property(
+                    "token",
+                    th.StringType,
+                    secret=True,
+                    required=True,
+                    description="Dropbox token",
+                ),
+            ),
+            description="Dropbox connection settings",
         ),
         th.Property(
             "csv_files_definition",

@@ -15,23 +15,25 @@ Note: This tap currently does not support incremental state.
 
 ## Settings
 
-| Setting              | Required | Default | Description                                                                                                                                                                                                                                              |
-| :------------------- | :------- | :------ | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| files                | False    | None    | An array of csv file stream settings                                                                                                                                                                                                                     |
-| filesystem           | False    | local   | The filesystem to use for reading files                                                                                                                                                                                                                  |
-| ftp                  | False    | None    | FTP connection settings                                                                                                                                                                                                                                  |
-| ftp.host             | True     | None    | FTP server host                                                                                                                                                                                                                                          |
-| ftp.port             | False    | 21      | FTP server port                                                                                                                                                                                                                                          |
-| ftp.username         | False    | None    | FTP username                                                                                                                                                                                                                                             |
-| ftp.password         | False    | None    | FTP password                                                                                                                                                                                                                                             |
-| ftp.encoding         | False    | utf-8   | FTP server encoding                                                                                                                                                                                                                                      |
-| github               | False    | None    | GitHub connection settings                                                                                                                                                                                                                               |
-| github.org           | True     | None    | GitHub organization or user where the repository is located                                                                                                                                                                                              |
-| github.repo          | True     | None    | GitHub repository                                                                                                                                                                                                                                        |
-| github.username      | False    | None    | GitHub username                                                                                                                                                                                                                                          |
-| github.token         | False    | None    | GitHub token                                                                                                                                                                                                                                             |
-| csv_files_definition | False    | None    | A path to the JSON file holding an array of file settings                                                                                                                                                                                                |
-| add_metadata_columns | False    | 0       | When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output                                                                                                                                       |
+| Setting              | Required | Default | Description                                                                                                        |
+| :------------------- | :------- | :------ | :----------------------------------------------------------------------------------------------------------------- |
+| files                | False    | None    | An array of csv file stream settings                                                                               |
+| filesystem           | False    | local   | The filesystem to use for reading files                                                                            |
+| ftp                  | False    | None    | FTP connection settings                                                                                            |
+| ftp.host             | True     | None    | FTP server host                                                                                                    |
+| ftp.port             | False    | 21      | FTP server port                                                                                                    |
+| ftp.username         | False    | None    | FTP username                                                                                                       |
+| ftp.password         | False    | None    | FTP password                                                                                                       |
+| ftp.encoding         | False    | utf-8   | FTP server encoding                                                                                                |
+| github               | False    | None    | GitHub connection settings                                                                                         |
+| github.org           | True     | None    | GitHub organization or user where the repository is located                                                        |
+| github.repo          | True     | None    | GitHub repository                                                                                                  |
+| github.username      | False    | None    | GitHub username                                                                                                    |
+| github.token         | False    | None    | GitHub token                                                                                                       |
+| dropbox              | False    | None    | Dropbox connection settings                                                                                        |
+| dropbox.token        | True     | None    | Dropbox token                                                                                                      |
+| csv_files_definition | False    | None    | A path to the JSON file holding an array of file settings                                                          |
+| add_metadata_columns | False    | 0       | When True, add the metadata columns (`_sdc_source_file`, `_sdc_source_file_mtime`, `_sdc_source_lineno`) to output |
 
 A full list of supported settings and capabilities is available by running: `tap-csv --about`
 

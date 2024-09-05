@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import os
 import typing as t
+from functools import cached_property
 
 import fsspec
 from singer_sdk import typing as th
@@ -129,7 +130,7 @@ class CSVStream(Stream):
         with self.fs.open(file_path, mode="r", encoding=encoding) as f:
             yield from csv.reader(f, dialect="tap_dialect")
 
-    @property
+    @cached_property
     def schema(self) -> dict:
         """Return dictionary of record schema.
 

@@ -75,9 +75,14 @@ plugins:
         sensitive: true
 
       # Dropbox settings
-      - name: dropbox.token
-        label: Dropbox Token
-        description: Token for Dropbox
+      - name: dropbox.app_key
+        label: Dropbox App Key
+        description: OAuth2 app key for Dropbox
+        kind: string
+        sensitive: true
+      - name: dropbox.refresh_token
+        label: Dropbox Refresh Token
+        description: OAuth2 refresh Token for Dropbox
         kind: password
         sensitive: true
 

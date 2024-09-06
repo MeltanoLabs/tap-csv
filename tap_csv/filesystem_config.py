@@ -76,11 +76,18 @@ DROPBOX = th.Property(
     "dropbox",
     th.ObjectType(
         th.Property(
-            "token",
+            "app_key",
             th.StringType,
             secret=True,
             required=True,
-            description="Dropbox token",
+            description="Dropbox App key",
+        ),
+        th.Property(
+            "refresh_token",
+            th.StringType,
+            secret=True,
+            required=True,
+            description="Dropbox refresh token",
         ),
     ),
     description="Dropbox connection settings",

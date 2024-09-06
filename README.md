@@ -93,20 +93,18 @@ Optionally, the files definition can be provided by an external json file:
 
 #### FTP
 
-| Setting      | Required | Default | Description             |
-| :----------- | :------- | :------ | :---------------------- |
-| ftp          | False    | None    | FTP connection settings |
-| ftp.host     | True     | None    | FTP server host         |
-| ftp.port     | False    | 21      | FTP server port         |
-| ftp.username | False    | None    | FTP username            |
-| ftp.password | False    | None    | FTP password            |
-| ftp.encoding | False    | utf-8   | FTP server encoding     |
+| Setting      | Required | Default | Description         |
+| :----------- | :------- | :------ | :------------------ |
+| ftp.host     | True     | None    | FTP server host     |
+| ftp.port     | False    | 21      | FTP server port     |
+| ftp.username | False    | None    | FTP username        |
+| ftp.password | False    | None    | FTP password        |
+| ftp.encoding | False    | utf-8   | FTP server encoding |
 
 #### GitHub
 
 | Setting         | Required | Default | Description                                                 |
 | :-------------- | :------- | :------ | :---------------------------------------------------------- |
-| github          | False    | None    | GitHub connection settings                                  |
 | github.org      | True     | None    | GitHub organization or user where the repository is located |
 | github.repo     | True     | None    | GitHub repository                                           |
 | github.username | False    | None    | GitHub username                                             |
@@ -141,10 +139,10 @@ Optionally, the files definition can be provided by an external json file:
 
 #### Dropbox
 
-| Setting       | Required | Default | Description                 |
-| :------------ | :------- | :------ | :-------------------------- |
-| dropbox       | False    | None    | Dropbox connection settings |
-| dropbox.token | True     | None    | Dropbox token               |
+| Setting               | Required | Default | Description           |
+| :-------------------- | :------- | :------ | :-------------------- |
+| dropbox.app_key       | True     | None    | Dropbox App key       |
+| dropbox.refresh_token | True     | None    | Dropbox refresh token |
 
 The token needs the `files.content.read` scope:
 
@@ -158,7 +156,8 @@ The token needs the `files.content.read` scope:
   "add_metadata_columns": true,
   "filesystem": "dropbox",
   "dropbox": {
-	"token": "...."
+    "app_key": "your_app_key",
+    "refresh_token": "your_refresh_token"
   },
   "files": [
     {

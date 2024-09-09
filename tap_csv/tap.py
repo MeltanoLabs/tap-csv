@@ -4,14 +4,14 @@ from __future__ import annotations
 
 import json
 import os
-from typing import List
 
 from singer_sdk import Stream, Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
+from singer_sdk.exceptions import ConfigValidationError
 from singer_sdk.helpers._classproperty import classproperty
 from singer_sdk.helpers.capabilities import TapCapabilities
 
-from tap_csv.client import CSVStream
+from . import client, filesystem_config
 
 
 class TapCSV(Tap):
@@ -38,12 +38,28 @@ class TapCSV(Tap):
                     th.Property("strict", th.BooleanType, required=False),
                 )
             ),
-            description="An array of csv file stream settings.",
+            description="An array of csv file stream settings",
         ),
+        th.Property(
+            "filesystem",
+            th.StringType,
+            required=False,
+            default="local",
+            description="The filesystem to use for reading files",
+            allowed_values=[
+                "local",
+                "ftp",
+                "github",
+                "dropbox",
+            ],
+        ),
+        filesystem_config.FTP,
+        filesystem_config.GITHUB,
+        filesystem_config.DROPBOX,
         th.Property(
             "csv_files_definition",
             th.StringType,
-            description="A path to the JSON file holding an array of file settings.",
+            description="A path to the JSON file holding an array of file settings",
         ),
         th.Property(
             "add_metadata_columns",
@@ -52,14 +68,14 @@ class TapCSV(Tap):
             default=False,
             description=(
                 "When True, add the metadata columns (`_sdc_source_file`, "
-                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output."
+                "`_sdc_source_file_mtime`, `_sdc_source_lineno`) to output"
             ),
         ),
     ).to_dict()
 
     @classproperty
     def capabilities(self) -> list[TapCapabilities]:
-        """Get tap capabilites."""
+        """Get tap capabilities."""
         return [
             TapCapabilities.CATALOG,
             TapCapabilities.DISCOVER,
@@ -78,7 +94,7 @@ class TapCSV(Tap):
                 with open(csv_files_definition) as f:
                     csv_files = json.load(f)
             else:
-                self.logger.error(f"tap-csv: '{csv_files_definition}' file not found")
+                self.logger.error("tap-csv: '%s' file not found", csv_files_definition)
                 exit(1)
         if not csv_files:
             self.logger.error("No CSV file definitions found.")
@@ -87,11 +103,20 @@ class TapCSV(Tap):
 
     def discover_streams(self) -> list[Stream]:
         """Return a list of discovered streams."""
+        filesystem = self.config["filesystem"]
+
+        if filesystem != "local" and filesystem not in self.config:
+            msg = "Misconfigured filesystem"
+            errors = [f"Missing filesystem options for {filesystem}"]
+            raise ConfigValidationError(msg, errors=errors)
+
         return [
-            CSVStream(
+            client.CSVStream(
                 tap=self,
                 name=file_config.get("entity"),
                 file_config=file_config,
+                filesystem=filesystem,
+                options=self.config.get(filesystem, {}),
             )
             for file_config in self.get_file_configs()
         ]

@@ -10,7 +10,7 @@ keywords = [
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = ">=3.8"
+python = ">=3.9"
 singer-sdk = "~=0.41.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -30,7 +30,7 @@ tap-csv = 'tap_csv.tap:TapCSV.cli'
 
 [tool.ruff]
 line-length = 88
-target-version = "py38"
+target-version = "py39"
 
 [tool.ruff.lint]
 ignore = [

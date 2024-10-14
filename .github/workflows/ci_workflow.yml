@@ -33,11 +33,6 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
-    strategy:
-      matrix:
-        # Only lint using the primary version used for dev
-        python-version: [3.9]
-
     steps:
     - uses: actions/checkout@v4
     - name: Install Poetry
@@ -45,12 +40,14 @@ jobs:
         pipx install poetry
         poetry --version
     - name: Set up Python ${{ matrix.python-version }}
+      id: setup-python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.x
         cache: poetry
     - name: Install dependencies
       run: |
+        poetry env use ${{ steps.setup-python.outputs.python-path }}
         poetry install
     - name: Run lint command from tox.ini
       run: |

@@ -114,8 +114,7 @@ Create tests within the `tap_csv/tests` subfolder and
   then run:
 
 ```bash
-poetry run tox
-poetry run tox -e pytest
+poetry run tox -e py313
 poetry run tox -e format
 poetry run tox -e lint
 ```

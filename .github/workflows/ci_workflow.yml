@@ -31,36 +31,23 @@ jobs:
   linting:
 
     runs-on: ubuntu-latest
-    env:
-      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     steps:
     - uses: actions/checkout@v4
-    - name: Install Poetry
-      run: |
-        pipx install poetry
-        poetry --version
-    - name: Set up Python ${{ matrix.python-version }}
-      id: setup-python
-      uses: actions/setup-python@v5
+    - uses: actions/setup-python@v5
       with:
         python-version: 3.x
-        cache: poetry
-    - name: Install dependencies
-      run: |
-        poetry env use ${{ steps.setup-python.outputs.python-path }}
-        poetry install
+    - uses: astral-sh/setup-uv@v3
+      with:
+        version: ">=0.4.20"
     - name: Run lint command from tox.ini
       run: |
-        pipx run tox -e lint
+        uvx tox -e lint
 
   pytest:
 
     runs-on: ubuntu-latest
-    env:
-      CLIENT_SECRETS: ${{ secrets.GA_CLIENT_SECRETS }}
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      PIP_CONSTRAINT: ${{ github.workspace }}/.github/workflows/constraints.txt
     strategy:
+      fail-fast: false
       matrix:
         python-version:
         - "3.8"
@@ -72,19 +59,14 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    - name: Install Poetry
-      run: |
-        pipx install poetry
-        poetry --version
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
         allow-prereleases: true
-        cache: poetry
-    - name: Install dependencies
-      run: |
-        poetry install
+    - uses: astral-sh/setup-uv@v3
+      with:
+        version: ">=0.4.20"
     - name: Test with pytest
       run: |
-        poetry run pytest --capture=no
+        uvx tox -e py

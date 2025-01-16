@@ -6,6 +6,7 @@ import csv
 import os
 import typing as t
 from datetime import datetime, timezone
+from functools import cached_property
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
@@ -121,12 +122,14 @@ class CSVStream(Stream):
         with open(file_path, encoding=encoding) as f:
             yield from csv.reader(f, dialect="tap_dialect")
 
-    @property
+    @cached_property
     def schema(self) -> dict:
         """Return dictionary of record schema.
 
         Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
+
+        This property is accessed multiple times for each record
+        so it's important to cache the result.
         """
         properties: list[th.Property] = []
         self.primary_keys = self.file_config.get("keys", [])

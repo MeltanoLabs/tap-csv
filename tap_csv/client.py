@@ -6,6 +6,7 @@ import csv
 import os
 import typing as t
 from datetime import datetime, timezone
+from functools import cached_property
 
 from singer_sdk import typing as th
 from singer_sdk.streams import Stream
@@ -28,7 +29,6 @@ class CSVStream(Stream):
         """Init CSVStram."""
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
-        self.stream_schema = None
         super().__init__(*args, **kwargs)
 
     def get_records(self, context: Context | None) -> t.Iterable[dict]:
@@ -122,17 +122,15 @@ class CSVStream(Stream):
         with open(file_path, encoding=encoding) as f:
             yield from csv.reader(f, dialect="tap_dialect")
 
-    @property
+    @cached_property
     def schema(self) -> dict:
         """Return dictionary of record schema.
 
         Dynamically detect the json schema for the stream.
 
         This property is accessed multiple times for each record
-        so it's important to cache the schema.
+        so it's important to cache the result.
         """
-        if self.stream_schema:
-            return self.stream_schema
 
         properties: list[th.Property] = []
         self.primary_keys = self.file_config.get("keys", [])
@@ -162,5 +160,4 @@ class CSVStream(Stream):
         # Cache header for future use
         self.header = header
 
-        self.stream_schema = th.PropertiesList(*properties).to_dict()
-        return self.stream_schema
+        return th.PropertiesList(*properties).to_dict()

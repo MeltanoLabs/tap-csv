@@ -28,6 +28,7 @@ class CSVStream(Stream):
         """Init CSVStram."""
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
+        self.stream_schema = None
         super().__init__(*args, **kwargs)
 
     def get_records(self, context: Context | None) -> t.Iterable[dict]:
@@ -126,8 +127,13 @@ class CSVStream(Stream):
         """Return dictionary of record schema.
 
         Dynamically detect the json schema for the stream.
-        This is evaluated prior to any records being retrieved.
+
+        This property is accessed multiple times for each record
+        so it's important to cache the schema.
         """
+        if self.stream_schema:
+            return self.stream_schema
+
         properties: list[th.Property] = []
         self.primary_keys = self.file_config.get("keys", [])
 
@@ -156,4 +162,5 @@ class CSVStream(Stream):
         # Cache header for future use
         self.header = header
 
-        return th.PropertiesList(*properties).to_dict()
+        self.stream_schema = th.PropertiesList(*properties).to_dict()
+        return self.stream_schema

@@ -131,7 +131,6 @@ class CSVStream(Stream):
         This property is accessed multiple times for each record
         so it's important to cache the result.
         """
-
         properties: list[th.Property] = []
         self.primary_keys = self.file_config.get("keys", [])
 

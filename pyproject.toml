@@ -10,8 +10,8 @@ keywords = [
 license = "Apache-2.0"
 
 [tool.poetry.dependencies]
-python = ">=3.9"
-singer-sdk = "~=0.44.0"
+python = ">=3.10,<4"
+singer-sdk = "~=0.48.0"
 
 [tool.poetry.group.dev.dependencies]
 coverage = ">=7.2"

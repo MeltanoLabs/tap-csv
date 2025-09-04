@@ -49,7 +49,7 @@ select = [
     # "PTH",
     "PERF",
     "RUF",
-    "TCH",
+    "TC",
     "UP",
 ]
 

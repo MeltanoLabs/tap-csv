@@ -58,7 +58,7 @@ class TapCSV(Tap):
 
     @classproperty
     def capabilities(self) -> list[TapCapabilities]:
-        """Get tap capabilites."""
+        """Get tap capabilities."""
         return [
             TapCapabilities.CATALOG,
             TapCapabilities.DISCOVER,

@@ -12,8 +12,6 @@ updates:
       time: "13:00"
       day: "monday"
       timezone: "US/Central"
-    reviewers:
-      - "pnadolny13"
     labels:
       - "dependencies"
     commit-message:
@@ -34,8 +32,6 @@ updates:
       time: "13:00"
       day: "monday"
       timezone: "US/Central"
-    reviewers:
-      - "pnadolny13"
     labels:
       - "dependencies"
     commit-message:
@@ -51,8 +47,6 @@ updates:
       time: "13:00"
       day: "monday"
       timezone: "US/Central"
-    reviewers:
-      - "pnadolny13"
     labels:
       - "dependencies"
     commit-message:

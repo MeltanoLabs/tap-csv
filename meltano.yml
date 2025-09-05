@@ -5,7 +5,7 @@ plugins:
   extractors:
   - name: tap-csv
     namespace: tap_csv
-    executable: -e .
+    pip_url: -e .
     capabilities:
     - state
     - catalog

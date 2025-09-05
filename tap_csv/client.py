@@ -22,14 +22,15 @@ SDC_SOURCE_FILE_MTIME_COLUMN = "_sdc_source_file_mtime"
 class CSVStream(Stream):
     """Stream class for CSV streams."""
 
-    file_paths: list[str] = []  # noqa: RUF012
-    header: list[str] = []  # noqa: RUF012
-
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: t.Any, **kwargs: t.Any) -> None:
         """Init CSVStram."""
         # cache file_config so we dont need to go iterating the config list again later
         self.file_config = kwargs.pop("file_config")
+        self._file_paths: list[str] = []
+        self._header: list[str] | None = None
         super().__init__(*args, **kwargs)
+
+        self._primary_keys: list[str] = self.file_config.get("keys", [])
 
     def get_records(self, context: Context | None) -> t.Iterable[dict]:
         """Return a generator of row-type dictionary objects.
@@ -38,6 +39,7 @@ class CSVStream(Stream):
         stream if partitioning is required for the stream. Most implementations do not
         require partitioning and should ignore the `context` argument.
         """
+        header = self.header
         for file_path in self.get_file_paths():
             file_last_modified = datetime.fromtimestamp(
                 os.path.getmtime(file_path), timezone.utc
@@ -54,7 +56,7 @@ class CSVStream(Stream):
                 if self.config.get("add_metadata_columns", False):
                     row = [file_path, file_last_modified, file_lineno, *row]
 
-                yield dict(zip(self.header, row))
+                yield dict(zip(header, row))
 
     def _get_recursive_file_paths(self, file_path: str) -> list:
         file_paths = []
@@ -67,7 +69,17 @@ class CSVStream(Stream):
 
         return file_paths
 
-    def get_file_paths(self) -> list:
+    @property
+    def file_paths(self) -> list[str]:
+        """Return the file paths of the stream."""
+        return self._file_paths
+
+    @file_paths.setter
+    def file_paths(self, paths: list[str]) -> None:
+        """Set the file paths of the stream."""
+        self._file_paths = paths
+
+    def get_file_paths(self) -> list[str]:
         """Return a list of file paths to read.
 
         This tap accepts file names and directories so it will detect
@@ -107,7 +119,7 @@ class CSVStream(Stream):
             )
         return is_valid
 
-    def get_rows(self, file_path: str) -> t.Iterable[list]:
+    def get_rows(self, file_path: str) -> t.Iterable[list[t.Any]]:
         """Return a generator of the rows in a particular CSV file."""
         encoding = self.file_config.get("encoding", None)
         csv.register_dialect(
@@ -122,6 +134,27 @@ class CSVStream(Stream):
         with open(file_path, encoding=encoding) as f:
             yield from csv.reader(f, dialect="tap_dialect")
 
+    @property
+    def header(self) -> list[str]:
+        """Parse the header of the CSV file."""
+        if self._header is not None:
+            return self._header
+
+        first_file = self.get_file_paths()[0]
+        for row in self.get_rows(first_file):
+            names = [str(col) for col in row]
+            break
+
+        if self.config.get("add_metadata_columns", False):
+            names = [
+                SDC_SOURCE_FILE_COLUMN,
+                SDC_SOURCE_FILE_MTIME_COLUMN,
+                SDC_SOURCE_LINENO_COLUMN,
+                *names,
+            ]
+        self._header = names
+        return names
+
     @cached_property
     def schema(self) -> dict:
         """Return dictionary of record schema.
@@ -132,23 +165,11 @@ class CSVStream(Stream):
         so it's important to cache the result.
         """
         properties: list[th.Property] = []
-        self.primary_keys = self.file_config.get("keys", [])
-
-        for file_path in self.get_file_paths():
-            for header in self.get_rows(file_path):  # noqa: B007
-                break
-            break
-
-        properties.extend(th.Property(column, th.StringType()) for column in header)
+        properties.extend(
+            th.Property(column, th.StringType()) for column in self.header
+        )
         # If enabled, add file's metadata to output
         if self.config.get("add_metadata_columns", False):
-            header = [
-                SDC_SOURCE_FILE_COLUMN,
-                SDC_SOURCE_FILE_MTIME_COLUMN,
-                SDC_SOURCE_LINENO_COLUMN,
-                *header,
-            ]
-
             properties.extend(
                 (
                     th.Property(SDC_SOURCE_FILE_COLUMN, th.StringType),
@@ -156,7 +177,5 @@ class CSVStream(Stream):
                     th.Property(SDC_SOURCE_LINENO_COLUMN, th.IntegerType),
                 )
             )
-        # Cache header for future use
-        self.header = header
 
         return th.PropertiesList(*properties).to_dict()

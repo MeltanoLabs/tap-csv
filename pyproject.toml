@@ -11,7 +11,7 @@ license = "Apache-2.0"
 
 [tool.poetry.dependencies]
 python = ">=3.10,<4"
-singer-sdk = "~=0.48.0"
+singer-sdk = "~=0.49.1"
 
 [tool.poetry.group.dev.dependencies]
 coverage = ">=7.2"

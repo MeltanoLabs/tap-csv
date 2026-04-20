@@ -1199,14 +1199,14 @@ files = [
 
 [[package]]
 name = "simpleeval"
-version = "1.0.3"
+version = "1.0.7"
 description = "A simple, safe single expression evaluator library."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "simpleeval-1.0.3-py3-none-any.whl", hash = "sha256:e3bdbb8c82c26297c9a153902d0fd1858a6c3774bf53ff4f134788c3f2035c38"},
-    {file = "simpleeval-1.0.3.tar.gz", hash = "sha256:67bbf246040ac3b57c29cf048657b9cf31d4e7b9d6659684daa08ca8f1e45829"},
+    {file = "simpleeval-1.0.7-py3-none-any.whl", hash = "sha256:97ac271bfd8f2af9e7b9a36ceea67617f26fa873f9d5ae1922f64d4c1442534b"},
+    {file = "simpleeval-1.0.7.tar.gz", hash = "sha256:1e10e5f9fec597814444e20c0892ed15162fa214c8a88f434b5b077cf2fef85b"},
 ]
 
 [[package]]
@@ -1331,14 +1331,14 @@ files = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.53.6"
+version = "0.53.7"
 description = "A framework for building Singer taps and targets"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "singer_sdk-0.53.6-py3-none-any.whl", hash = "sha256:fd6ee45fadec67d42d6aa0a33416c9e850cc90f38f87a37500bb088967f8965c"},
-    {file = "singer_sdk-0.53.6.tar.gz", hash = "sha256:97f1def1bff6ec44321a4a3c635deb082342a26529581fce8a48f7e26c63ee5c"},
+    {file = "singer_sdk-0.53.7-py3-none-any.whl", hash = "sha256:0ce05f2900c290d4525f23e9fef79bafa0303610ffea93df81a9eead21e27d46"},
+    {file = "singer_sdk-0.53.7.tar.gz", hash = "sha256:4761903bfc7e9daa11bc2a8c5df52af38c3de065291e87c9f875c766b92a74ee"},
 ]
 
 [package.dependencies]
@@ -1356,7 +1356,7 @@ python-dotenv = ">=0.20"
 pyyaml = ">=6.0"
 referencing = ">=0.30.0"
 requests = ">=2.25.1"
-simpleeval = ">=0.9.13,<1.0.1 || >1.0.1,<1.0.5"
+simpleeval = "1.0.7"
 simplejson = ">=3.17.6"
 sqlalchemy = ">=2"
 typing-extensions = {version = ">=4.5.0", markers = "python_version < \"3.13\""}

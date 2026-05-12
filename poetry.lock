@@ -1334,14 +1334,14 @@ files = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.53.7"
+version = "0.54.0"
 description = "A framework for building Singer taps and targets"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "singer_sdk-0.53.7-py3-none-any.whl", hash = "sha256:0ce05f2900c290d4525f23e9fef79bafa0303610ffea93df81a9eead21e27d46"},
-    {file = "singer_sdk-0.53.7.tar.gz", hash = "sha256:4761903bfc7e9daa11bc2a8c5df52af38c3de065291e87c9f875c766b92a74ee"},
+    {file = "singer_sdk-0.54.0-py3-none-any.whl", hash = "sha256:52d20d614686adee9bf68a57d7f22331e659200820ec1f247b591ac4d4f6c69a"},
+    {file = "singer_sdk-0.54.0.tar.gz", hash = "sha256:b9924c2cadb03ff64fd6e11f539c166d5d9e7ea93e8aa43d9e758ffcfaa2297b"},
 ]
 
 [package.dependencies]
@@ -1364,6 +1364,7 @@ simplejson = ">=3.17.6"
 sqlalchemy = ">=2"
 typing-extensions = {version = ">=4.5.0", markers = "python_version < \"3.13\""}
 universal-pathlib = ">=0.2.6"
+urllib3 = ">=1.26.20"
 
 [package.extras]
 faker = ["faker (>=22.5)"]
@@ -1602,4 +1603,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.10,<4"
-content-hash = "59ae145938535f38ea70324abf799420b38cb8f6775f953ba7c87a912ec63170"
+content-hash = "5eb6a203f050152c55e0faafba0b5d0ba5c076b19585d2191bbbcfa9d33cb5fa"

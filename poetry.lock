@@ -1375,14 +1375,14 @@ files = [
 
 [[package]]
 name = "singer-sdk"
-version = "0.54.4"
+version = "0.54.5"
 description = "A framework for building Singer taps and targets"
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "singer_sdk-0.54.4-py3-none-any.whl", hash = "sha256:d83d94a55870edabc5cec7cc7158fa59716b10e3753a0aa8a9e997f7ec915e72"},
-    {file = "singer_sdk-0.54.4.tar.gz", hash = "sha256:aebbaf1f0db4383b18a20bea4e19c1d939d52dc77d5bdd2e2897579b475d51d1"},
+    {file = "singer_sdk-0.54.5-py3-none-any.whl", hash = "sha256:5479b69e2240ec4dd7635f5290d958ef141694a036d6e9aa6e167005aa9c2188"},
+    {file = "singer_sdk-0.54.5.tar.gz", hash = "sha256:a0ac6524721c0b0b75999864f74c6280f4611be930c39103cb101e20cacc3d8c"},
 ]
 
 [package.dependencies]
@@ -1415,7 +1415,7 @@ parquet = ["pyarrow (>=15)"]
 s3 = ["s3fs (>=2024.9.0)"]
 sql = ["sqlalchemy (>=2)"]
 ssh = ["paramiko (>=3.3.0)"]
-testing = ["pytest (>=9)"]
+testing = ["pytest (>=9.1)"]
 
 [[package]]
 name = "sqlalchemy"
